@@ -38,6 +38,8 @@ namespace BookStoreApplication
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserBussiness, UserBussiness>();
+            services.AddScoped<IBookRepository, BookRepository>();
+            services.AddScoped<IBookBussiness, BookBussiness>();
 
             services.AddSwaggerGen(c =>
             {

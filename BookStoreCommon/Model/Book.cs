@@ -10,7 +10,7 @@ namespace BookStoreCommon.Model
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public int BookId { get; set; }
 
         [Required]
         public string Bookname { get; set; }
@@ -25,7 +25,7 @@ namespace BookStoreCommon.Model
         [Required]
         public double BookPrice { get; set; }
         [Required]
-        public string Rating { get; set; }
+        public double Rating { get; set; }
     }
 }
 //1.BookId 2.BookName 3.BookDescription 4.BookAuthor 5.BookImage 6.BookCount 7.BookPrice 8.Rating 

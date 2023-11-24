@@ -40,8 +40,6 @@ namespace BookStoreCommon.Model
 
                 };
                 SMTP.Send("shrey0683@gmail.com", "jdfundooapplication@gmail.com", subject, body);
-                // Process the logic be sending the message
-                //Restart the asynchronous receive operation.
                 messageQueue.BeginReceive();
             }
             catch (MessageQueueException)

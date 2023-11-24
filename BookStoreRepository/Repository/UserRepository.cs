@@ -22,7 +22,6 @@ namespace BookStoreRepository.Repository
     {
         private readonly IConfiguration iconfiguration;
         private SqlConnection con;
-        public string Key = "ankit@@sehrawat@@";
         public UserRepository(IConfiguration iconfiguration)
         {
             this.iconfiguration = iconfiguration;
@@ -96,6 +95,7 @@ namespace BookStoreRepository.Repository
         {
             var objUser = new User();
             connection();
+            con.Open();
             SqlCommand com = new SqlCommand("GetUser", con);
             com.CommandType = CommandType.StoredProcedure;
             com.Parameters.AddWithValue("@email", email);
@@ -134,11 +134,12 @@ namespace BookStoreRepository.Repository
                     return null;
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                throw e.InnerException;
             }
         }
+
         public User ResetPassword(string email, string newpassword, string confirmpassword)
         {
             var user = GetTheUser(email);
@@ -147,9 +148,30 @@ namespace BookStoreRepository.Repository
                 var input = user;
                 var password = EncryptPassword(newpassword);
                 input.Password = password;
-             }
+                if (input != null)
+                {
+                    connection();
+                    SqlCommand com = new SqlCommand("EditUser", con);
+                    com.CommandType = CommandType.StoredProcedure;
+                    com.Parameters.AddWithValue("@name", input.Name);
+                    com.Parameters.AddWithValue("@phone", input.Phone);
+                    com.Parameters.AddWithValue("@email", input.Email);
+                    com.Parameters.AddWithValue("@password", input.Password);
+                    con.Open();
+                    int i = com.ExecuteNonQuery();
+                    con.Close();
+                    if (i != 0)
+                    {
+                        return input;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
                 return null;
-     
+            }
+            return null;
         }
         public string GenerateSecurityToken(string email, int userId)
         {
