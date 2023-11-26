@@ -1,6 +1,7 @@
 ﻿using BookStoreBussiness.IBussiness;
 using BookStoreCommon.Model;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Win32;
 using System;
@@ -14,6 +15,7 @@ namespace BookStoreApplication.Controllers
     public class BookController : ControllerBase
     {
         public readonly IBookBussiness bookBussiness;
+        public string ImageUrl = null;
          public BookController(IBookBussiness bookBussiness)
         {
             this.bookBussiness = bookBussiness; 
@@ -24,6 +26,7 @@ namespace BookStoreApplication.Controllers
         {
             try
             {
+               // book.Image = this.ImageUrl;
                 var result = this.bookBussiness.AddBook(book);
                 if (result == true)
                 {
@@ -36,23 +39,61 @@ namespace BookStoreApplication.Controllers
                 return Task.FromResult<ActionResult>(this.NotFound(new { Status = false, Message = ex.Message }));
             }
         }
-        //[HttpGet]
-        //[Route("GetAllBooks")]
-        //public async Task<ActionResult> GetAllBooks()
-        //{
-        //    try
-        //    {
-        //        var result = this.bookBussiness.GetAllBooks();
-        //        if (result != null)
-        //        {
-        //            return this.Ok(new { Status = true, Message = "Books retrieved", data = result });
-        //        }
-        //        return this.BadRequest(new { Status = false, Message = "No books Found" });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return this.NotFound(new { Status = false, Message = ex.Message });
-        //    }
-        //}
+        [HttpGet]
+        [Route("GetAllBooks")]
+        public async Task<ActionResult> GetAllBooks()
+        {
+            try
+            {
+                var result = this.bookBussiness.GetAllBooks();
+                if (result != null)
+                {
+                    return this.Ok(new { Status = true, Message = "Books retrieved", data = result });
+                }
+                return this.BadRequest(new { Status = false, Message = "No books Found" });
+            }
+            catch (Exception ex)
+            {
+                return this.NotFound(new { Status = false, Message = ex.Message });
+            }
+        }
+        [HttpPut]
+        [Route("EditBook")]
+        public ActionResult EditBook(Book book)
+        {
+            try
+            {
+                //book.Image = this.ImageUrl;
+                var result = this.bookBussiness.EditBook(book);
+                if (result != null)
+                {
+                    return this.Ok(new { Status = true, Message = "Edit Task Successful", data = book });
+                }
+                return this.BadRequest(new { Status = false, Message = "Notes found empty" });
+            }
+            catch (Exception ex)
+            {
+                return this.NotFound(new { Status = false, Message = ex.Message });
+            }
+        }
+        [HttpPost]
+        [Route("UploadImage")]
+        public ActionResult AddBook(IFormFile file,int bookId)
+        {
+            try
+            {
+                var result = this.bookBussiness.UploadImage(file, bookId);
+                if (result != null)
+                {
+                    //this.ImageUrl = result.ToString();
+                    return this.Ok(new { Status = true, Message = "image added", data = result });
+                }
+                return this.BadRequest(new { Status = false, Message = "Not found" });
+            }
+            catch (Exception ex)
+            {
+                return this.NotFound(new { Status = false, Message = ex.Message });
+            }
+        }
     }
 }

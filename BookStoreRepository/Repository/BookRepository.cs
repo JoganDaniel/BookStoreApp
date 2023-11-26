@@ -7,6 +7,10 @@ using System.Data;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using static System.Net.Mime.MediaTypeNames;
+using System.Xml.Linq;
+using Microsoft.AspNetCore.Http;
+using CloudinaryDotNet.Actions;
+using CloudinaryDotNet;
 
 namespace BookStoreRepository.Repository
 {
@@ -61,6 +65,139 @@ namespace BookStoreRepository.Repository
             }
 
         }
-        
+        public List<Book> GetAllBooks()
+        {
+            List<Book> ListBook = new List<Book>();
+            try
+            {
+                connection();
+                SqlCommand com = new SqlCommand("spGetAllBooks", con);
+                com.CommandType = CommandType.StoredProcedure;
+                SqlDataAdapter da = new SqlDataAdapter(com);
+                DataTable dt = new DataTable();
+                con.Open();
+                da.Fill(dt);
+                con.Close();
+
+                foreach (DataRow dr in dt.Rows)
+                {
+                    ListBook.Add(
+                   new Book
+                   {
+                       BookId = Convert.ToInt32(dr["bookid"]),
+                       Bookname = Convert.ToString(dr["bookname"]),
+                       BookDescription = Convert.ToString(dr["bookdecription"]),
+                       BookAuthor = Convert.ToString(dr["bookauthor"]),
+                       Image = Convert.ToString(dr["image"]),
+                       BookCount = Convert.ToInt32(dr["bookcount"]),
+                       BookPrice = Convert.ToDouble(dr["bookprice"]),
+                       Rating = Convert.ToDouble(dr["rating"]),
+                   });
+                }
+            }
+            catch (Exception ex) { throw new Exception(ex.Message); }
+            if (ListBook.Count > 0)
+            {
+                return ListBook;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        public Book EditBook(Book book)
+        {
+            var book1 = GetBook(book.BookId);
+           
+                if (book1 != null)
+                {
+                connection();
+                con.Open();
+                SqlCommand com = new SqlCommand("EditBook", con);
+                com.CommandType = CommandType.StoredProcedure;
+                com.Parameters.AddWithValue("@bookid", book.BookId);
+                com.Parameters.AddWithValue("@bookname", book.Bookname);
+                com.Parameters.AddWithValue("@bookdecription", book.BookDescription);
+                com.Parameters.AddWithValue("@bookauthor", book.BookAuthor);
+                com.Parameters.AddWithValue("@image", book.Image);
+                com.Parameters.AddWithValue("@bookcount", book.BookCount);
+                com.Parameters.AddWithValue("@bookprice", book.BookPrice);
+                com.Parameters.AddWithValue("@rating", book.Rating);
+                
+                    int i = com.ExecuteNonQuery();
+                    
+                    if (i != 0)
+                    {
+                        return book;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+            }
+            con.Close();
+            return null;
+        }
+        public Book GetBook(int bookId)
+        {
+            var book = new Book();
+            connection();
+            con.Open();
+            SqlCommand com = new SqlCommand("spGetBook", con);
+            com.CommandType = CommandType.StoredProcedure;
+            com.Parameters.AddWithValue("@bookid", bookId);
+            //SqlDataAdapter da = new SqlDataAdapter(com);
+            SqlDataReader reader = com.ExecuteReader();
+
+            if (reader.Read())
+            {
+                book = new Book
+                {
+                    BookId = (int)reader["bookid"],
+                    Bookname =(string)reader["bookname"],
+                    BookDescription = (string)reader["bookdecription"],
+                    BookAuthor = (string)reader["bookauthor"],
+                    Image = (string)reader["image"],
+                    BookCount = (int)reader["bookcount"],
+                    BookPrice = (double)reader["bookprice"],
+                    Rating = (double)reader["rating"]
+                };
+            }
+            con.Close();
+            return book;
+        }
+        public string UploadImage(IFormFile file, int bookId)
+        {
+            try
+            {
+                if (file == null)
+                {
+                    return null;
+                }
+                var stream = file.OpenReadStream();
+                var name = file.FileName;
+                Account account = new Account("din6haoa4", "776115924597624", "rn41eF0fTqTN_7IMKefa2NycM7I");
+                Cloudinary cloudinary = new Cloudinary(account);
+                var uploadParams = new ImageUploadParams()
+                {
+                    File = new FileDescription(name, stream)
+                };
+                ImageUploadResult uploadResult = cloudinary.Upload(uploadParams);
+                cloudinary.Api.UrlImgUp.BuildUrl(String.Format("{0}.{1}", uploadResult.PublicId, uploadResult.Format));
+                var cloudnaryfilelink = uploadResult.Uri.ToString();
+                UpdateImageUrl(cloudnaryfilelink, bookId);
+                return cloudnaryfilelink;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public void UpdateImageUrl(string  url,int bookId)
+        {
+            Book book5 = GetBook(bookId);
+            book5.Image = url;
+            EditBook(book5);
+        }
     }
 }
