@@ -193,11 +193,30 @@ namespace BookStoreRepository.Repository
                 throw new Exception(ex.Message);
             }
         }
-        public void UpdateImageUrl(string  url,int bookId)
+        public void UpdateImageUrl(string url,int bookId)
         {
             Book book5 = GetBook(bookId);
             book5.Image = url;
             EditBook(book5);
+        }
+        public bool DeleteBook(int bookId)
+        {
+            try
+            {
+                connection();
+                SqlCommand com = new SqlCommand("spDeleteBook", con);
+                com.Parameters.AddWithValue("@bookid", bookId);
+                com.CommandType = CommandType.StoredProcedure;
+                con.Open();
+                int i = com.ExecuteNonQuery();
+                con.Close();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+                throw new Exception(ex.Message);   
+            }
         }
     }
 }

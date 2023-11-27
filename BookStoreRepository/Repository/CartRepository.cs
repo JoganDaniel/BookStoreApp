@@ -1,15 +1,15 @@
 ﻿using BookStoreCommon.Model;
-using BookStoreRepository.IRepository;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.SqlClient;
+using System.Data;
 using System.Text;
+using BookStoreRepository.IRepository;
 
 namespace BookStoreRepository.Repository
 {
-    public class WishlistRepository : IWishlistRepository
+    public class CartRepository : ICartRepository
     {
         private SqlConnection con;
         public readonly IConfiguration configuration;
@@ -18,17 +18,17 @@ namespace BookStoreRepository.Repository
             string connectionstr = configuration.GetConnectionString("UserDbConnection");
             con = new SqlConnection(connectionstr);
         }
-        public WishlistRepository(IConfiguration configuration)
+        public CartRepository(IConfiguration configuration)
         {
             this.configuration = configuration;
         }
-        public bool AddToWishlist(int bookId,int userId)
+        public bool AddToCart(int bookId, int userId)
         {
             try
             {
                 connection();
                 con.Open();
-                SqlCommand com = new SqlCommand("spAddWishlist", con);
+                SqlCommand com = new SqlCommand("spAddCart", con);
                 com.CommandType = CommandType.StoredProcedure;
                 com.Parameters.AddWithValue("@bookid", bookId);
                 com.Parameters.AddWithValue("@userid", userId);
@@ -55,13 +55,13 @@ namespace BookStoreRepository.Repository
             }
 
         }
-        public List<Wishlist> GetWishList(int userId)
+        public List<Cart> GetCart(int userId)
         {
-            List<Wishlist> WishlistList = new List<Wishlist>();
+            List<Cart> CartList = new List<Cart>();
             try
             {
                 connection();
-                SqlCommand com = new SqlCommand("spGetWishList", con);
+                SqlCommand com = new SqlCommand("spGetCart", con);
                 com.Parameters.AddWithValue("@userid", userId);
                 com.CommandType = CommandType.StoredProcedure;
                 SqlDataAdapter da = new SqlDataAdapter(com);
@@ -70,11 +70,11 @@ namespace BookStoreRepository.Repository
                 da.Fill(dt);
                 foreach (DataRow dr in dt.Rows)
                 {
-                    WishlistList.Add(
-                   new Wishlist
+                    CartList.Add(
+                   new Cart
                    {
                        BookId = Convert.ToInt32(dr["bookid"]),
-                       WishlistId = Convert.ToInt32(dr["wishlistid"]),
+                       CartId = Convert.ToInt32(dr["cartid"]),
                        UserId = Convert.ToInt32(dr["userid"]),
                        Book = new Book()
                        {
@@ -87,28 +87,28 @@ namespace BookStoreRepository.Repository
                            BookPrice = Convert.ToDouble(dr["bookprice"]),
                            Rating = Convert.ToDouble(dr["rating"])
                        }
-                }) ;
+                   });
                 }
             }
             catch (Exception ex) { throw new Exception(ex.Message); }
-            if (WishlistList.Count > 0)
+            if (CartList.Count > 0)
             {
                 con.Close();
-                return WishlistList;
+                return CartList;
             }
             else
             {
-                con.Close ();
+                con.Close();
                 return null;
             }
         }
-        public bool DeleteWishlist(int wishlistid)
+        public bool DeleteCart(int cartid)
         {
             try
             {
                 connection();
-                SqlCommand com = new SqlCommand("spDeleteWishList", con);
-                com.Parameters.AddWithValue("@wishlistid", wishlistid);
+                SqlCommand com = new SqlCommand("spDeleteCart", con);
+                com.Parameters.AddWithValue("@cartid", cartid);
                 com.CommandType = CommandType.StoredProcedure;
                 con.Open();
                 int i = com.ExecuteNonQuery();

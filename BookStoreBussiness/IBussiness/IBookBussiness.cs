@@ -12,5 +12,6 @@ namespace BookStoreBussiness.IBussiness
         public List<Book> GetAllBooks();
         public Book EditBook(Book book);
         public string UploadImage(IFormFile file , int bookId);
+        public bool DeleteBook(int bookId);
     }
 }

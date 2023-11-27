@@ -95,5 +95,23 @@ namespace BookStoreApplication.Controllers
                 return this.NotFound(new { Status = false, Message = ex.Message });
             }
         }
+        [HttpPut]
+        [Route("DeleteBook")]
+        public ActionResult DeleteBook(int bookId)
+        {
+            try
+            {
+                var result = this.bookBussiness.DeleteBook(bookId);
+                if (result != false)
+                {
+                    return this.Ok(new { Status = true, Message = "Deleted book" });
+                }
+                return this.BadRequest(new { Status = false, Message = "Data empty" });
+            }
+            catch (Exception ex)
+            {
+                return this.NotFound(new { Status = false, Message = ex.Message });
+            }
+        }
     }
 }

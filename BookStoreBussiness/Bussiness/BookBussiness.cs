@@ -20,6 +20,11 @@ namespace BookStoreBussiness.Bussiness
             return this.bookrepository.AddBook(book);
         }
 
+        public bool DeleteBook(int bookId)
+        {
+            return this.bookrepository.DeleteBook(bookId);
+        }
+
         public Book EditBook(Book book)
         {
             return this.bookrepository.EditBook(book);
@@ -30,9 +35,9 @@ namespace BookStoreBussiness.Bussiness
             return this.bookrepository.GetAllBooks();
         }
 
-        public string UploadImage(IFormFile file)
+        public string UploadImage(IFormFile file,int bookId)
         {
-            return this.bookrepository.UploadImage(file);
+            return this.bookrepository.UploadImage(file,bookId);
         }
     }
 }

@@ -1,5 +1,6 @@
 using BookStoreBussiness.Bussiness;
 using BookStoreBussiness.IBussiness;
+using BookStoreCommon.Model;
 using BookStoreRepository.IRepository;
 using BookStoreRepository.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -40,6 +41,12 @@ namespace BookStoreApplication
             services.AddScoped<IUserBussiness, UserBussiness>();
             services.AddScoped<IBookRepository, BookRepository>();
             services.AddScoped<IBookBussiness, BookBussiness>();
+            services.AddScoped<IWishlistRepository, WishlistRepository>();
+            services.AddScoped<IWishlistBusiness, WishlistBusiness>();
+            services.AddScoped<ICartBusiness, CartBusiness>();
+            services.AddScoped<ICartRepository, CartRepository>();
+            services.AddScoped<ICustomerDetailsBusiness, CustomerDetailsBusiness>();
+            services.AddScoped<ICustomerDetailsRepository, CustomerDetailsRepository>();
 
             services.AddSwaggerGen(c =>
             {
