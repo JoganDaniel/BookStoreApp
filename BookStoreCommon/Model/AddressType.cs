@@ -6,7 +6,7 @@ using System.Text;
 
 namespace BookStoreCommon.Model
 {
-    public class Type
+    public class AddressType
     {
         [Key]
         [Required]

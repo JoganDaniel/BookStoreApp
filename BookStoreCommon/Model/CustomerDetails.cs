@@ -8,6 +8,9 @@ namespace BookStoreCommon.Model
 {
     public class CustomerDetails
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int CustomerId { get; set; }
         [Required]
         public string CustomerName { get; set; }
         [Required]
@@ -19,7 +22,7 @@ namespace BookStoreCommon.Model
         public int TypeId { get; set; }
         [ForeignKey("UserId")]
         public int UserId { get; set; }
-        public Type Type { get; set; }
+        public AddressType Type { get; set; }
     }
 }
 //1.FullName

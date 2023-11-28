@@ -19,9 +19,19 @@ namespace BookStoreBussiness.Bussiness
             return this.customerRepository.AddToCustomerDetails(cDetails);
         }
 
-        public List<CustomerDetails> GetCustomerDetails(int userId)
+        public bool DeleteAddress(int userId, int customerid)
         {
-            return this.GetCustomerDetails(userId);
+            return this.customerRepository.DeleteAddress(userId,customerid);
+        }
+
+        public CustomerDetails EditAddress(int customerid, CustomerDetails details)
+        {
+            return this.customerRepository.EditAddress(customerid, details);
+        }
+
+        public IEnumerable<CustomerDetails> GetCustomerDetails(int userId)
+        {
+            return this.customerRepository.GetCustomerDetails(userId);
         }
     }
 }

@@ -8,7 +8,9 @@ namespace BookStoreRepository.IRepository
     public interface ICustomerDetailsRepository
     {
         public bool AddToCustomerDetails(CustomerDetails cDetails);
-        public List<CustomerDetails> GetCustomerDetails(int userId);
+        public IEnumerable<CustomerDetails> GetCustomerDetails(int userid);
+        public CustomerDetails EditAddress(int userId, CustomerDetails details);
+        public bool DeleteAddress(int userId, int customerid);
 
     }
 }

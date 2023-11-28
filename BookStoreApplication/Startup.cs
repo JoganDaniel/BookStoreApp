@@ -47,6 +47,8 @@ namespace BookStoreApplication
             services.AddScoped<ICartRepository, CartRepository>();
             services.AddScoped<ICustomerDetailsBusiness, CustomerDetailsBusiness>();
             services.AddScoped<ICustomerDetailsRepository, CustomerDetailsRepository>();
+            services.AddScoped<IFeedbackBusiness, FeedbackBusiness>();
+            services.AddScoped<IFeedbackRepository, FeedbackRepository>();
 
             services.AddSwaggerGen(c =>
             {
