@@ -1,10 +1,12 @@
-﻿using System;
+﻿using BookStoreCommon.Model;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace BookStoreBussiness.IBussiness
 {
-    internal interface IOrderSummaryBusiness
+    public interface IOrderSummaryBusiness
     {
+        public IEnumerable<OrderSummary> GetOrderSummary();
     }
 }

@@ -12,6 +12,7 @@
   <ItemGroup>
     <ProjectReference Include="..\BookStoreCommon\BookStoreCommon.csproj" />
     <ProjectReference Include="..\BookStoreRepository\BookStoreRepository.csproj" />
+    <ProjectReference Include="..\NLogImplementation\NLogImplementation.csproj" />
   </ItemGroup>
 
 </Project>

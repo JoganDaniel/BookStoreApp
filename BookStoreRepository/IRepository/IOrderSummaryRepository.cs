@@ -1,10 +1,12 @@
-﻿using System;
+﻿using BookStoreCommon.Model;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace BookStoreRepository.IRepository
 {
-    internal interface IOrderSummaryRepository
+    public interface IOrderSummaryRepository
     {
+        public IEnumerable<OrderSummary> GetOrderSummary();
     }
 }

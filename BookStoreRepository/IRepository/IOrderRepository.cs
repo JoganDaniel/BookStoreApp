@@ -4,7 +4,8 @@ using System.Text;
 
 namespace BookStoreRepository.IRepository
 {
-    internal interface IOrderRepository
+    public interface IOrderRepository
     {
+        public int PlaceOrder(int cartid, int customerid);
     }
 }

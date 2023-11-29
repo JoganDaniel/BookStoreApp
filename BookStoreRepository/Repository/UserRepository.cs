@@ -15,6 +15,7 @@ using System.Data.SqlClient;
 using System.Data;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
+using NLogImplementation;
 
 namespace BookStoreRepository.Repository
 {
@@ -50,6 +51,7 @@ namespace BookStoreRepository.Repository
                 con.Close();
                 if (i != 0)
                 {
+
                     return true;
                 }
                 else
@@ -114,6 +116,7 @@ namespace BookStoreRepository.Repository
                 };
             }
             con.Close();
+
             return objUser;
             
         }
