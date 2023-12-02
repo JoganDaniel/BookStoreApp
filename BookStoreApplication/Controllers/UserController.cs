@@ -9,6 +9,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Linq;
 using BookStoreBussiness.IBussiness;
+using NLogImplementation;
 
 namespace BookStoreApplication.Controllers
 {
@@ -16,6 +17,7 @@ namespace BookStoreApplication.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
+        Nlog nlog  = new Nlog();
         public readonly IUserBussiness userBussiness;
         public UserController(IUserBussiness userBussiness)
         {
@@ -73,6 +75,7 @@ namespace BookStoreApplication.Controllers
                 var result = this.userBussiness.ResetPassword(email, newpassword, confirmpassword);
                 if (result != null)
                 {
+                    nlog.LogInfo("password reset Successfully");
                     return this.Ok(new { Status = true, Message = "User Password Reset Successful", Data = result });
                 }
                 return this.BadRequest(new { Status = false, Message = "User Password Reset Unsuccessful" });

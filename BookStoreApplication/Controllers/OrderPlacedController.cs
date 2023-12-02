@@ -26,8 +26,8 @@ namespace BookStoreApplication.Controllers
         {
             try
             {
-                //var userId = Convert.ToInt32(User.Claims.FirstOrDefault(v => v.Type == "Id").Value);
-                var result = this.orderBusiness.PlaceOrder(customerid, cartid);
+                var userId = Convert.ToInt32(User.Claims.FirstOrDefault(v => v.Type == "Id").Value);
+                var result = this.orderBusiness.PlaceOrder(customerid, cartid,userId);
                 if (result != 0)
                 {
                     return Task.FromResult<ActionResult>(this.Ok(new { Status = true, Message = "Order placed successfully", Data = "success" }));

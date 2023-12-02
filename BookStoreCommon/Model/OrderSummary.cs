@@ -14,5 +14,6 @@ namespace BookStoreCommon.Model
         [Required]
         [ForeignKey("OrderId")]
         public int OrderId { get; set; }
+        public OrderPlaced OrderPlaced { get; set; }
     }
 }

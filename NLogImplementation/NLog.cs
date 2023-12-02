@@ -3,7 +3,7 @@ using System;
 
 namespace NLogImplementation
 {
-    public class NLog
+    public class Nlog
     {
         Logger logger = LogManager.GetCurrentClassLogger();
         public void LogInfo(string message)

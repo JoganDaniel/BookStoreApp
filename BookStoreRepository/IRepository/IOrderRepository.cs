@@ -6,6 +6,6 @@ namespace BookStoreRepository.IRepository
 {
     public interface IOrderRepository
     {
-        public int PlaceOrder(int cartid, int customerid);
+        public int PlaceOrder(int cartid, int customerid,int userid);
     }
 }

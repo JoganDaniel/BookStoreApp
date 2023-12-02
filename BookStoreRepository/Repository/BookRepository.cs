@@ -11,6 +11,10 @@ using System.Xml.Linq;
 using Microsoft.AspNetCore.Http;
 using CloudinaryDotNet.Actions;
 using CloudinaryDotNet;
+using Microsoft.Extensions.Caching.Distributed;
+using Newtonsoft.Json;
+using System.Linq;
+using NLogImplementation;
 
 namespace BookStoreRepository.Repository
 {
@@ -18,6 +22,8 @@ namespace BookStoreRepository.Repository
     {
         private readonly IConfiguration configuration;
         SqlConnection con;
+        Nlog nlog = new Nlog();
+        public readonly IDistributedCache distributedCache;
         public BookRepository(IConfiguration configuration)
         {
             this.configuration = configuration;
@@ -78,7 +84,12 @@ namespace BookStoreRepository.Repository
                 con.Open();
                 da.Fill(dt);
                 con.Close();
-
+                var cacheResult = GetListFromCache("bookList");
+                if (cacheResult!=null)
+                {
+                    nlog.LogDebug("cache list got");
+                    return cacheResult;
+                }
                 foreach (DataRow dr in dt.Rows)
                 {
                     ListBook.Add(
@@ -98,6 +109,7 @@ namespace BookStoreRepository.Repository
             catch (Exception ex) { throw new Exception(ex.Message); }
             if (ListBook.Count > 0)
             {
+                PutListToCache(ListBook);
                 return ListBook;
             }
             else
@@ -217,6 +229,17 @@ namespace BookStoreRepository.Repository
                 return false;
                 throw new Exception(ex.Message);   
             }
+        }
+        public void PutListToCache(List<Book> books)
+        {
+            var options = new DistributedCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromMinutes(60));
+            var jsonString = JsonConvert.SerializeObject(books);
+            distributedCache.SetString("bookList", jsonString, options);
+        }
+        public List<Book> GetListFromCache(string key)
+        {
+            var cacheString = this.distributedCache.GetString(key);
+            return JsonConvert.DeserializeObject<IEnumerable<Book>>(cacheString).ToList();
         }
     }
 }

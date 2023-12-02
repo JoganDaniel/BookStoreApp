@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Win32;
+using NLogImplementation;
 using System;
 using System.Threading.Tasks;
 
@@ -16,12 +17,14 @@ namespace BookStoreApplication.Controllers
     {
         public readonly IBookBussiness bookBussiness;
         public string ImageUrl = null;
+        Nlog nlog = new Nlog();
          public BookController(IBookBussiness bookBussiness)
         {
             this.bookBussiness = bookBussiness; 
         }
         [HttpPost]
         [Route("AddBook")]
+        [Authorize(Roles ="Admin")]
         public Task<ActionResult> AddBook(Book book)
         {
             try
@@ -30,6 +33,7 @@ namespace BookStoreApplication.Controllers
                 var result = this.bookBussiness.AddBook(book);
                 if (result == true)
                 {
+                    nlog.LogInfo("book added Successfully");
                     return Task.FromResult<ActionResult>(this.Ok(new { Status = true, Message = "book added successfully", Data = book }));
                 }
                 return Task.FromResult<ActionResult>(this.BadRequest(new { Status = false, Message = "book adding Unsuccessful" }));
@@ -59,6 +63,8 @@ namespace BookStoreApplication.Controllers
         }
         [HttpPut]
         [Route("EditBook")]
+        [Authorize(Roles = "Admin")]
+
         public ActionResult EditBook(Book book)
         {
             try
@@ -97,6 +103,8 @@ namespace BookStoreApplication.Controllers
         }
         [HttpPut]
         [Route("DeleteBook")]
+        [Authorize(Roles = "Admin")]
+
         public ActionResult DeleteBook(int bookId)
         {
             try

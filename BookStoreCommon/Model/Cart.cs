@@ -17,6 +17,7 @@ namespace BookStoreCommon.Model
         public int BookId { get; set; }
         [ForeignKey("UserId")]
         public int UserId { get; set; }
+        public int BookCount { get; set; }
         public Book Book { get; set; }
     }
 }

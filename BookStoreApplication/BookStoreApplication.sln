@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStoreApplication", "BookStoreApplication.csproj", "{650CC404-602D-408F-9CB1-FBBDD0C3066E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookStoreApplication", "BookStoreApplication.csproj", "{650CC404-602D-408F-9CB1-FBBDD0C3066E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStoreCommon", "..\BookStoreCommon\BookStoreCommon.csproj", "{260E0C07-70E8-4931-9D4D-E2E5E696B0F1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookStoreCommon", "..\BookStoreCommon\BookStoreCommon.csproj", "{260E0C07-70E8-4931-9D4D-E2E5E696B0F1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStoreBussiness", "..\BookStoreBussiness\BookStoreBussiness.csproj", "{1391972F-C9BA-4BAD-8E14-3E97492A9662}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookStoreBussiness", "..\BookStoreBussiness\BookStoreBussiness.csproj", "{1391972F-C9BA-4BAD-8E14-3E97492A9662}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStoreRepository", "..\BookStoreRepository\BookStoreRepository.csproj", "{3A15AB5F-489B-4AC5-862F-1660AEA6A673}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookStoreRepository", "..\BookStoreRepository\BookStoreRepository.csproj", "{3A15AB5F-489B-4AC5-862F-1660AEA6A673}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLogImplementation", "..\NLogImplementation\NLogImplementation.csproj", "{2C78EDB1-3D0E-40B2-BC87-411A2E06B90E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NlogImplementation", "..\NLogImplementation\NlogImplementation.csproj", "{2C78EDB1-3D0E-40B2-BC87-411A2E06B90E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

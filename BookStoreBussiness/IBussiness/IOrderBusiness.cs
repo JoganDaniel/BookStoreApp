@@ -6,6 +6,6 @@ namespace BookStoreBussiness.IBussiness
 {
     public interface IOrderBusiness
     {
-        public int PlaceOrder(int cartid, int customerid);
+        public int PlaceOrder(int cartid, int customerid, int userid);
     }
 }

@@ -15,9 +15,9 @@ namespace BookStoreBussiness.Bussiness
             this.summaryRepository = summaryRepository;
         }
 
-        public IEnumerable<OrderSummary> GetOrderSummary()
+        public IEnumerable<OrderSummary> GetOrderSummary(int userid)
         {
-            return this.summaryRepository.GetOrderSummary();
+            return this.summaryRepository.GetOrderSummary(userid);
         }
     }
 }

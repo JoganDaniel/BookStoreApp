@@ -24,5 +24,6 @@ namespace BookStoreCommon.Model
         [Required(ErrorMessage = "Password is null")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+        public string IsAdmin { get; set; }
     }
 }

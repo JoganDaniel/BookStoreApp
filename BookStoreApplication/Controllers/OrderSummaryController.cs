@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
 using System;
+using NLogImplementation;
 
 namespace BookStoreApplication.Controllers
 {
@@ -13,7 +14,7 @@ namespace BookStoreApplication.Controllers
     public class OrderSummaryController : ControllerBase
     {
         public readonly IOrderSummaryBusiness orderSummaryBusiness;
-
+        Nlog nlog = new Nlog();
         public OrderSummaryController(IOrderSummaryBusiness orderSummaryBusiness)
         {
             this.orderSummaryBusiness = orderSummaryBusiness;
@@ -24,13 +25,14 @@ namespace BookStoreApplication.Controllers
         {
             try
             {
-                //var userId = Convert.ToInt32(User.Claims.FirstOrDefault(v => v.Type == "Id").Value);
-                var result = this.orderSummaryBusiness.GetOrderSummary();
+                var userId = Convert.ToInt32(User.Claims.FirstOrDefault(v => v.Type == "Id").Value);
+                var result = this.orderSummaryBusiness.GetOrderSummary(userId);
                 if (result != null)
                 {
-                    return Task.FromResult<ActionResult>(this.Ok(new { Status = true, Message = "Customer details retrieved", data = result }));
+                    nlog.LogInfo("Order summary got successfully");
+                    return Task.FromResult<ActionResult>(this.Ok(new { Status = true, Message = "summary details retrieved", data = result }));
                 }
-                return Task.FromResult<ActionResult>(this.BadRequest(new { Status = false, Message = "No customers Found" }));
+                return Task.FromResult<ActionResult>(this.BadRequest(new { Status = false, Message = "Not Found" }));
             }
             catch (Exception ex)
             {

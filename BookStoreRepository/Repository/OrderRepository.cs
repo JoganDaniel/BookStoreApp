@@ -23,7 +23,7 @@ namespace BookStoreRepository.Repository
             string connectionStr = configuration.GetConnectionString("UserDbConnection");
             con = new SqlConnection(connectionStr);
         }
-        public int PlaceOrder(int cartid,int customerid)
+        public int PlaceOrder(int cartid,int customerid,int userid)
         {
             try
             {
@@ -33,6 +33,7 @@ namespace BookStoreRepository.Repository
                 com.CommandType = CommandType.StoredProcedure;
                 com.Parameters.AddWithValue("@customerid", customerid);
                 com.Parameters.AddWithValue("@cartid", cartid);
+                com.Parameters.AddWithValue("@userid", userid);
                 //con.Open();
                 int i = com.ExecuteNonQuery();
                 //con.Close();

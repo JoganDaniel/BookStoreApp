@@ -15,6 +15,8 @@ namespace BookStoreCommon.Model
         public int CustomerId { get; set; }
         [ForeignKey("CartId")]
         public int CartId { get; set; }
+        public int UserId { get; set; }
+        public Cart Cart { get; set; }  
 
     }
 }

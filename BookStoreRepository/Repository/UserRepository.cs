@@ -16,6 +16,7 @@ using System.Data;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
 using NLogImplementation;
+using CloudinaryDotNet.Actions;
 
 namespace BookStoreRepository.Repository
 {
@@ -79,7 +80,7 @@ namespace BookStoreRepository.Repository
                 var decryptPassword = DecryptPassword(user.Password);
                 if (user != null && decryptPassword.Equals(password))
                 {
-                    var token = GenerateSecurityToken(user.Email, user.Id);
+                    var token = GenerateSecurityToken(user.Email, user.Id,user.IsAdmin);
                     return token;
                 }
                 return null;
@@ -112,7 +113,8 @@ namespace BookStoreRepository.Repository
                     Name = (string)reader["name"],
                     Email = (string)reader["email"],
                     Password = (string)reader["password"],
-                    Phone = (string)reader["phone"]
+                    Phone = (string)reader["phone"],
+                    IsAdmin = (string)reader["isadmin"]
                 };
             }
             con.Close();
@@ -127,7 +129,7 @@ namespace BookStoreRepository.Repository
                 var emailcheck = GetTheUser(Email);
                 if (emailcheck != null)
                 {
-                    var token = GenerateSecurityToken(emailcheck.Email, emailcheck.Id);
+                    var token = GenerateSecurityToken(emailcheck.Email, emailcheck.Id,emailcheck.IsAdmin);
                     MSMQ msmq = new MSMQ();
                     msmq.sendData2Queue(token, Email);
                     return token;
@@ -176,7 +178,7 @@ namespace BookStoreRepository.Repository
             }
             return null;
         }
-        public string GenerateSecurityToken(string email, int userId)
+        public string GenerateSecurityToken(string email, int userId,string role)
         {
             var tokenhandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(this.iconfiguration[("JWT:Key")]);
@@ -185,7 +187,8 @@ namespace BookStoreRepository.Repository
                 Subject = new ClaimsIdentity(new[]
                 {
                     new Claim(ClaimTypes.Email, email),
-                    new Claim("Id",userId.ToString())
+                    new Claim("Id", userId.ToString()),
+                    new Claim("Role", role)
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(30),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
