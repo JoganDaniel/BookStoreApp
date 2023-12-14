@@ -7,8 +7,9 @@ namespace BookStoreBussiness.IBussiness
 {
     public interface ICartBusiness
     {
-        public bool AddToCart(int bookId, int userId);
+        public bool AddToCart(int bookId, int userId, int bookcount);
         public List<Cart> GetCart(int userId);
         public bool DeleteCart(int cartid);
+        public int UpdateCart(int userId, int cartid, int count);
     }
 }

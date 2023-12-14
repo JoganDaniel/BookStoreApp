@@ -55,9 +55,9 @@ Alter Procedure spAddBook(
 @bookdecription varchar(30), 
 @bookauthor varchar(20),
 @image varchar(100),
-@bookcount varchar(20),
-@bookprice varchar(20),
-@rating varchar(20) 
+@bookcount int,
+@bookprice float,
+@rating float 
 )
 As
 begin insert Into Book values(@bookname,@bookdecription,@bookauthor,@image,@bookcount,@bookprice,@rating)
@@ -134,13 +134,14 @@ Delete from Wishlist where wishlistid=@wishlistid;
 End
 
 ------cart------
-CREATE TABLE Cart
+create TABLE Cart
 (
     cartid INT PRIMARY KEY IDENTITY(1,1),
     bookid INT,
     userid INT,
     CONSTRAINT bookid FOREIGN KEY (bookid) REFERENCES Book(bookid)
 );
+drop table Cart;
 
 CREATE PROCEDURE spGetCart
     @userid INT
@@ -151,13 +152,14 @@ BEGIN
     Cart.bookid = Book.bookid where userid = @userid
 END;
 
-Create Procedure spAddCart
+alter Procedure spAddCart
  @userid INT,
-    @bookid INT
+    @bookid INT,
+	@bookcount int
 AS
 BEGIN
 begin try
-    insert Into Cart values(@bookid,@userid)
+    insert Into Cart values(@bookid,@userid,@bookcount)
 	End try
 Begin catch
 Print 'An Error occured: ' + ERROR_MESSAGE();
@@ -285,6 +287,19 @@ Begin catch
 Print 'An Error occured: ' + ERROR_MESSAGE();
 End Catch
 END;
+
+alter procedure spGetFeedback
+@bookid int
+as
+begin
+select *
+FROM
+	CustomerFeedback
+ inner join 
+	Book on CustomerFeedback.bookid=Book.bookid 
+	inner join
+	UserRegister on CustomerFeedback.userid = UserRegister.id where CustomerFeedback.bookid=@bookid;
+	end;
 
 create table OrderPlaced
 (

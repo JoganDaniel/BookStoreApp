@@ -31,7 +31,7 @@ namespace BookStoreCommon.Model
                 var msg = messageQueue.EndReceive(e.AsyncResult);
                 string token = msg.Body.ToString();
                 string subject = "Book Store App Reset Link";
-                string body =  token;
+                string body = "https://localhost:5002/api/User/ResetPassword"+token;
                 var SMTP = new SmtpClient("smtp.gmail.com")
                 {
                     Port = 587,
@@ -39,7 +39,7 @@ namespace BookStoreCommon.Model
                     EnableSsl = true
 
                 };
-                SMTP.Send("shrey0683@gmail.com", "jdfundooapplication@gmail.com", subject, body);
+                SMTP.Send("shrey0683@gmail.com", "jogandaniel7@gmail.com", subject, body);
                 messageQueue.BeginReceive();
             }
             catch (MessageQueueException)

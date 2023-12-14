@@ -101,7 +101,7 @@ namespace BookStoreApplication.Controllers
                 }
                 else
                 {
-                    return BadRequest(new { success = false, message = "Reset UnSuccessful" });
+                    return BadRequest(new { success = false, message = " UnSuccessful" });
                 }
 
             }

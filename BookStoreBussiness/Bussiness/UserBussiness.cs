@@ -17,28 +17,22 @@ namespace BookStoreBussiness.Bussiness
         }
         public bool RegisterUser(User user)
         {
-            var result = userRepository.RegisterUser(user);
+            var result = this.userRepository.RegisterUser(user);
             return result;
         }
         public string LoginUser(string email, string password)
         {
-            return userRepository.LoginUser(email, password);
+            return this.userRepository.LoginUser(email, password);
         }
         public User ResetPassword(string email, string newpassword, string confirmpassword)
         {
-            var result = userRepository.ResetPassword(email,newpassword,confirmpassword);
+            var result = this.userRepository.ResetPassword(email,newpassword,confirmpassword);
             return result;
         }
         public string ForgetPassword(string Email)
         {
-            try
-            {
-                return userRepository.ForgetPassword(Email);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+                return this.userRepository.ForgetPassword(Email);
+ 
         }
     }
 }

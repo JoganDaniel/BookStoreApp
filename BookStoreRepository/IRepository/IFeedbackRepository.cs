@@ -8,5 +8,6 @@ namespace BookStoreRepository.IRepository
     public interface IFeedbackRepository
     {
         public CustomerFeedback AddToCustomerFeedback(CustomerFeedback feedback);
+        public List<CustomerFeedback> GetAllFeedback(int bookid);
     }
 }

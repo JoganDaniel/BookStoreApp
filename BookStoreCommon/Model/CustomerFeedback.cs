@@ -19,6 +19,7 @@ namespace BookStoreCommon.Model
         public string Description { get; set; }
         public double Rating { get; set; }
         public Book Book { get; set; }
+        public User User { get; set; }
     }
 }
 //1.FeedbackId

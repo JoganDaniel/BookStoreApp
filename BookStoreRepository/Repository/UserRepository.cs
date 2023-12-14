@@ -129,7 +129,14 @@ namespace BookStoreRepository.Repository
                 var emailcheck = GetTheUser(Email);
                 if (emailcheck != null)
                 {
-                    var token = GenerateSecurityToken(emailcheck.Email, emailcheck.Id,emailcheck.IsAdmin);
+                    //if (emailcheck.IsAdmin == null)
+                    //{
+                      string token = GenerateSecurityToken(emailcheck.Email, emailcheck.Id, emailcheck.IsAdmin);
+                    //}
+                    //else
+                    //{
+                    //    token = GenerateSecurityToken(emailcheck.Email, emailcheck.Id, emailcheck.IsAdmin);
+                    //}
                     MSMQ msmq = new MSMQ();
                     msmq.sendData2Queue(token, Email);
                     return token;
@@ -188,7 +195,7 @@ namespace BookStoreRepository.Repository
                 {
                     new Claim(ClaimTypes.Email, email),
                     new Claim("Id", userId.ToString()),
-                    new Claim("Role", role)
+                    new Claim("Roles", role)
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(30),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),

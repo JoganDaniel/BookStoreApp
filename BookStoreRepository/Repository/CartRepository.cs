@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Data;
 using System.Text;
 using BookStoreRepository.IRepository;
+using NLogImplementation;
 
 namespace BookStoreRepository.Repository
 {
@@ -22,7 +23,7 @@ namespace BookStoreRepository.Repository
         {
             this.configuration = configuration;
         }
-        public bool AddToCart(int bookId, int userId)
+        public bool AddToCart(int bookId, int userId,int bookcount)
         {
             try
             {
@@ -32,6 +33,7 @@ namespace BookStoreRepository.Repository
                 com.CommandType = CommandType.StoredProcedure;
                 com.Parameters.AddWithValue("@bookid", bookId);
                 com.Parameters.AddWithValue("@userid", userId);
+                com.Parameters.AddWithValue("@bookcount", bookcount);
                 //con.Open();
                 int i = com.ExecuteNonQuery();
                 //con.Close();
@@ -121,5 +123,25 @@ namespace BookStoreRepository.Repository
                 throw new Exception(ex.Message);
             }
         }
-    }
+        public int UpdateCart(int userId, int cartid, int count)
+        {
+            try
+            {
+                connection();
+                SqlCommand ObjSqlCommand = new SqlCommand("SP_UpdateCart", con);
+                ObjSqlCommand.CommandType = CommandType.StoredProcedure;
+                ObjSqlCommand.Parameters.AddWithValue("@userid", userId);
+                ObjSqlCommand.Parameters.AddWithValue("@cartid", cartid);
+                ObjSqlCommand.Parameters.AddWithValue("@bookcount", count);
+                Cart objCart = new Cart();
+                con.Open();
+                int i = ObjSqlCommand.ExecuteNonQuery();
+                return i;
+            }
+            catch(Exception ex)
+            {
+                return 0;
+            }
+        }
+        }
 }

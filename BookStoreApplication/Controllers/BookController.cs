@@ -24,7 +24,7 @@ namespace BookStoreApplication.Controllers
         }
         [HttpPost]
         [Route("AddBook")]
-        [Authorize(Roles ="Admin")]
+        [Authorize]
         public Task<ActionResult> AddBook(Book book)
         {
             try
@@ -63,7 +63,8 @@ namespace BookStoreApplication.Controllers
         }
         [HttpPut]
         [Route("EditBook")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
+        [Authorize]
 
         public ActionResult EditBook(Book book)
         {
@@ -103,8 +104,8 @@ namespace BookStoreApplication.Controllers
         }
         [HttpPut]
         [Route("DeleteBook")]
-        [Authorize(Roles = "Admin")]
-
+        //[Authorize(Roles = "Admin")]
+        [Authorize]
         public ActionResult DeleteBook(int bookId)
         {
             try

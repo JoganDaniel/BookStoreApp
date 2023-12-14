@@ -20,12 +20,12 @@ namespace BookStoreApplication.Controllers
         }
         [HttpPost]
         [Route("AddCart")]
-        public Task<ActionResult> AddCart(int bookId)
+        public Task<ActionResult> AddCart(int bookId,int bookcount)
         {
             try
             {
                 var userId = Convert.ToInt32(User.Claims.FirstOrDefault(v => v.Type == "Id").Value);
-                var result = this.cartBusiness.AddToCart(userId, bookId);
+                var result = this.cartBusiness.AddToCart(bookId, userId, bookcount);
                 if (result == true)
                 {
                     return Task.FromResult<ActionResult>(this.Ok(new { Status = true, Message = "Cart added successfully", Data = "success" }));
@@ -49,7 +49,7 @@ namespace BookStoreApplication.Controllers
                 {
                     return this.Ok(new { Status = true, Message = "Cart retrieved", data = result });
                 }
-                return this.BadRequest(new { Status = false, Message = "No wishlist Found" });
+                return this.BadRequest(new { Status = false, Message = "No cart Found" });
             }
             catch (Exception ex)
             {
@@ -64,6 +64,24 @@ namespace BookStoreApplication.Controllers
             {
                 var result = this.cartBusiness.DeleteCart(cartid);
                 if (result != false)
+                {
+                    return this.Ok(new { Status = true, Message = "Deleted cart successfully" });
+                }
+                return this.BadRequest(new { Status = false, Message = "Data empty" });
+            }
+            catch (Exception ex)
+            {
+                return this.NotFound(new { Status = false, Message = ex.Message });
+            }
+        }
+        [HttpPut]
+        [Route("UpdateCart")]
+        public ActionResult UpdateCart(int cartid,int userid,int bookcount)
+        {
+            try
+            {
+                var result = this.cartBusiness.UpdateCart(cartid,userid, bookcount);
+                if (result !=0)
                 {
                     return this.Ok(new { Status = true, Message = "Deleted cart successfully" });
                 }

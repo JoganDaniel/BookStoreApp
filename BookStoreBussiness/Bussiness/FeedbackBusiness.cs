@@ -17,5 +17,10 @@ namespace BookStoreBussiness.Bussiness
         {
            return this.feedbackRepository.AddToCustomerFeedback(feedback);
         }
+
+        public List<CustomerFeedback> GetAllFeedback(int bookid)
+        {
+            return this.feedbackRepository.GetAllFeedback(bookid);
+        }
     }
 }

@@ -14,9 +14,9 @@ namespace BookStoreBussiness.Bussiness
         {
             this.cartrepository = cartrepository;
         }
-        public bool AddToCart(int bookId, int userId)
+        public bool AddToCart(int bookId, int userId, int bookcount)
         {
-            return this.cartrepository.AddToCart(bookId, userId);
+            return this.cartrepository.AddToCart(bookId, userId,bookcount);
         }
 
         public bool DeleteCart(int cartid)
@@ -27,6 +27,11 @@ namespace BookStoreBussiness.Bussiness
         public List<Cart> GetCart(int userId)
         {
             return this.cartrepository.GetCart(userId);
+        }
+
+        public int UpdateCart(int userId, int cartid, int count)
+        {
+            return this.cartrepository.UpdateCart(userId, cartid, count);
         }
     }
 }

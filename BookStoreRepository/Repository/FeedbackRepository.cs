@@ -59,5 +59,59 @@ namespace BookStoreRepository.Repository
             }
 
         }
+        public List<CustomerFeedback> GetAllFeedback(int bookid)
+        {
+            List<CustomerFeedback> feedbackList = new List<CustomerFeedback>();
+            try
+            {
+                connection();
+                SqlCommand com = new SqlCommand("spGetFeedback", con);
+                com.CommandType = CommandType.StoredProcedure;
+                com.Parameters.AddWithValue("@bookid", bookid);
+                SqlDataAdapter da = new SqlDataAdapter(com);
+                DataTable dt = new DataTable();
+                con.Open();
+                da.Fill(dt);
+                con.Close();
+        
+                foreach (DataRow dr in dt.Rows)
+                {
+                    feedbackList.Add(  
+                   new CustomerFeedback
+                   {
+                       FeedbackId = Convert.ToInt32(dr["feedbackid"]),
+                       UserId = Convert.ToInt32(dr["userid"]),
+                       BookId = Convert.ToInt32(dr["bookid"]),
+                       Description = Convert.ToString(dr["description"]),
+                       Rating = Convert.ToDouble(dr["rating"]),
+                       Book = new Book()
+                       {
+                           BookId = Convert.ToInt32(dr["bookid"]),
+                           Bookname = Convert.ToString(dr["bookname"]),
+                           BookDescription = Convert.ToString(dr["bookdecription"]),
+                           BookAuthor = Convert.ToString(dr["bookauthor"]),
+                           Image = Convert.ToString(dr["image"]),
+                           BookCount = Convert.ToInt32(dr["bookcount"]),
+                           BookPrice = Convert.ToInt32(dr["bookprice"]),
+                           Rating = Convert.ToInt32(dr["rating"])
+                       },
+                       User = new User()
+                       {
+                           Name = Convert.ToString(dr["name"])
+                       }
+                   }
+                   );
+                }
+            }
+            catch (Exception ex) { throw new Exception(ex.Message); }
+            if (feedbackList.Count > 0)
+            {
+                return feedbackList;
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 }

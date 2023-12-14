@@ -84,12 +84,12 @@ namespace BookStoreRepository.Repository
                 con.Open();
                 da.Fill(dt);
                 con.Close();
-                var cacheResult = GetListFromCache("bookList");
-                if (cacheResult!=null)
-                {
-                    nlog.LogDebug("cache list got");
-                    return cacheResult;
-                }
+                //var cacheResult = GetListFromCache("bookList");
+                //if (cacheResult!=null)
+                //{
+                //    nlog.LogDebug("cache list got");
+                //    return cacheResult;
+                //}
                 foreach (DataRow dr in dt.Rows)
                 {
                     ListBook.Add(
@@ -109,7 +109,7 @@ namespace BookStoreRepository.Repository
             catch (Exception ex) { throw new Exception(ex.Message); }
             if (ListBook.Count > 0)
             {
-                PutListToCache(ListBook);
+                //PutListToCache(ListBook);
                 return ListBook;
             }
             else
