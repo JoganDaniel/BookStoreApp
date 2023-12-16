@@ -76,14 +76,15 @@ namespace BookStoreApplication.Controllers
         }
         [HttpPut]
         [Route("UpdateCart")]
-        public ActionResult UpdateCart(int cartid,int userid,int bookcount)
+        public ActionResult UpdateCart(int cartid,int bookcount)
         {
             try
             {
-                var result = this.cartBusiness.UpdateCart(cartid,userid, bookcount);
+                var userid = Convert.ToInt32(User.Claims.FirstOrDefault(v => v.Type == "Id").Value);
+                var result = this.cartBusiness.UpdateCart(userid, cartid, bookcount);
                 if (result !=0)
                 {
-                    return this.Ok(new { Status = true, Message = "Deleted cart successfully" });
+                    return this.Ok(new { Status = true, Message = "Updated cart successfully" });
                 }
                 return this.BadRequest(new { Status = false, Message = "Data empty" });
             }

@@ -33,8 +33,7 @@ namespace BookStoreRepository.Repository
                 com.CommandType = CommandType.StoredProcedure;
                 com.Parameters.AddWithValue("@customerid", customerid);
                 com.Parameters.AddWithValue("@cartid", cartid);
-                com.Parameters.AddWithValue("@userid", userid);
-                //con.Open();
+                  //con.Open();
                 int i = com.ExecuteNonQuery();
                 //con.Close();
                 return i;

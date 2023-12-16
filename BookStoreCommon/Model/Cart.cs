@@ -19,5 +19,6 @@ namespace BookStoreCommon.Model
         public int UserId { get; set; }
         public int BookCount { get; set; }
         public Book Book { get; set; }
+        public int isAvailable { get; set; }
     }
 }

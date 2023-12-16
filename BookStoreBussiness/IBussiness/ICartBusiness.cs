@@ -11,5 +11,6 @@ namespace BookStoreBussiness.IBussiness
         public List<Cart> GetCart(int userId);
         public bool DeleteCart(int cartid);
         public int UpdateCart(int userId, int cartid, int count);
+        public List<Cart> GetCartByBook(int userId, int bookid);
     }
 }

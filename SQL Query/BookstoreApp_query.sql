@@ -50,7 +50,7 @@ CREATE TABLE Book(
 
 drop table Book;
 
-Alter Procedure spAddBook(
+create Procedure spAddBook(
 @bookname varchar(20),
 @bookdecription varchar(30), 
 @bookauthor varchar(20),
@@ -75,7 +75,7 @@ As
 Begin Select * from Book where bookid=@bookid
 End
 
-Alter Procedure EditBook(
+create Procedure EditBook(
 @bookid int,
 @bookname varchar(20),
 @bookdecription varchar(30), 
@@ -104,6 +104,16 @@ BEGIN
     SELECT *
     FROM Wishlist inner join Book on
     Wishlist.bookid = Book.bookid where userid = @userid
+END;
+
+CREATE PROCEDURE spGetWishListbyBook
+    @userid int,
+	@bookid int
+	AS
+BEGIN
+    SELECT *
+    FROM Wishlist inner join Book on
+    Wishlist.bookid = Book.bookid where Wishlist.bookid = @bookid and userid = @userid
 END;
 
 Create Procedure spAddWishlist
@@ -139,17 +149,41 @@ create TABLE Cart
     cartid INT PRIMARY KEY IDENTITY(1,1),
     bookid INT,
     userid INT,
+	bookcount int
     CONSTRAINT bookid FOREIGN KEY (bookid) REFERENCES Book(bookid)
 );
 drop table Cart;
 
-CREATE PROCEDURE spGetCart
+ALTER TABLE Cart
+ADD isavailable INT DEFAULT 1;
+
+alter Procedure SP_UpdateCart(
+@userid int,
+@cartid int,
+@bookcount int
+)
+As
+begin
+update Cart set Cart.bookcount=@bookcount where userid=@userid and cartid=@cartid
+End
+
+alter PROCEDURE spGetCart
     @userid INT
 	AS
 BEGIN
     SELECT *
     FROM Cart inner join Book on
-    Cart.bookid = Book.bookid where userid = @userid
+    Cart.bookid = Book.bookid where userid = @userid and isavailable=1;
+END;
+
+CREATE PROCEDURE spGetCartByBook
+    @userid INT,
+	@bookid int
+	AS
+BEGIN
+    SELECT *
+    FROM Cart inner join Book on
+    Cart.bookid = Book.bookid where Cart.bookid = @bookid
 END;
 
 alter Procedure spAddCart
@@ -159,29 +193,39 @@ alter Procedure spAddCart
 AS
 BEGIN
 begin try
-    insert Into Cart values(@bookid,@userid,@bookcount)
+    insert Into Cart(bookid,userid,bookcount,isavailable) values(@bookid,@userid,@bookcount,1)
 	End try
 Begin catch
 Print 'An Error occured: ' + ERROR_MESSAGE();
 End Catch
 END;
 
-Create procedure spDeleteCart
+alter procedure spDeleteCart
 (
 	@cartid int
 )
 As
 Begin
 begin try
-Delete from Cart where cartid=@cartid;
+UPDATE Cart
+SET isavailable = 0
+WHERE cartid = @cartid;
 End try
 Begin catch
 Print 'An Error occured: ' + ERROR_MESSAGE();
 End Catch
 End
 
+Delete from Cart where cartid=2;
 ------customer details
 
+create table Type
+(
+typeid int primary key Identity(1,1),
+typename varchar(20)
+);
+drop table Type;
+insert into Type values('Other');
 CREATE TABLE CustomerDetails
 (
 id int primary key identity(1,1),
@@ -197,7 +241,7 @@ id int primary key identity(1,1),
 );
 drop table CustomerDetails
 
-Alter PROCEDURE spGetCustomerDetails
+create PROCEDURE spGetCustomerDetails
     @userid INT
 	AS
 BEGIN
@@ -230,7 +274,7 @@ End Catch
 END;
 use BookStore;
 
-Alter Procedure spEditCustomer(
+Create Procedure spEditCustomer(
 @customername varchar(20),
 @customerid int,
     @phone varchar(20),
@@ -273,7 +317,7 @@ CREATE TABLE CustomerFeedback
     FOREIGN KEY (userid) REFERENCES UserRegister(id)
 );
 
-Alter Procedure spAddCustomerFeedback
+create Procedure spAddCustomerFeedback
 	@bookid int,
 	@userid int,
 	@description varchar(30),
@@ -288,7 +332,7 @@ Print 'An Error occured: ' + ERROR_MESSAGE();
 End Catch
 END;
 
-alter procedure spGetFeedback
+create procedure spGetFeedback
 @bookid int
 as
 begin
@@ -307,14 +351,17 @@ create table OrderPlaced
 	customerid int foreign key references CustomerDetails(id),
 	cartid int foreign key references Cart(cartid)
 	)
+	drop table OrderPlaced
 
-	create Procedure spPlaceOrder
+	alter Procedure spPlaceOrder
 	@customerid int,
 	@cartid int
 AS
 BEGIN
 begin try
-    insert Into OrderPlaced values(@customerid,@cartid)
+    insert Into OrderPlaced values(@customerid,@cartid);
+	UPDATE Cart
+SET isavailable = 0;
 	end try 
 	begin catch
 	Print 'An Error occured: ' + ERROR_MESSAGE();
@@ -341,3 +388,5 @@ Inner JOIN
  inner join 
 	Book on Cart.bookid=Book.bookid where OrderSummary.orderid=@orderid;
 	end;
+
+	Delete from Cart

@@ -80,7 +80,7 @@ namespace BookStoreRepository.Repository
                 var decryptPassword = DecryptPassword(user.Password);
                 if (user != null && decryptPassword.Equals(password))
                 {
-                    var token = GenerateSecurityToken(user.Email, user.Id,user.IsAdmin);
+                    var token = GenerateSecurityToken(user.Email, user.Id,"normal");
                     return token;
                 }
                 return null;
@@ -114,7 +114,7 @@ namespace BookStoreRepository.Repository
                     Email = (string)reader["email"],
                     Password = (string)reader["password"],
                     Phone = (string)reader["phone"],
-                    IsAdmin = (string)reader["isadmin"]
+                    //IsAdmin = (string)reader["isadmin"]
                 };
             }
             con.Close();
@@ -131,7 +131,7 @@ namespace BookStoreRepository.Repository
                 {
                     //if (emailcheck.IsAdmin == null)
                     //{
-                      string token = GenerateSecurityToken(emailcheck.Email, emailcheck.Id, emailcheck.IsAdmin);
+                      string token = GenerateSecurityToken(emailcheck.Email, emailcheck.Id, "");
                     //}
                     //else
                     //{

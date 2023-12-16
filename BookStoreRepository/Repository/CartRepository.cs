@@ -7,6 +7,7 @@ using System.Data;
 using System.Text;
 using BookStoreRepository.IRepository;
 using NLogImplementation;
+using System.Linq;
 
 namespace BookStoreRepository.Repository
 {
@@ -23,37 +24,46 @@ namespace BookStoreRepository.Repository
         {
             this.configuration = configuration;
         }
+
         public bool AddToCart(int bookId, int userId,int bookcount)
         {
-            try
+            var a = GetCartByBook(userId,bookId);
+            if (a == null)
             {
-                connection();
-                con.Open();
-                SqlCommand com = new SqlCommand("spAddCart", con);
-                com.CommandType = CommandType.StoredProcedure;
-                com.Parameters.AddWithValue("@bookid", bookId);
-                com.Parameters.AddWithValue("@userid", userId);
-                com.Parameters.AddWithValue("@bookcount", bookcount);
-                //con.Open();
-                int i = com.ExecuteNonQuery();
-                //con.Close();
-                if (i != 0)
+                try
                 {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                    connection();
+                    con.Open();
+                    SqlCommand com = new SqlCommand("spAddCart", con);
+                    com.CommandType = CommandType.StoredProcedure;
+                    com.Parameters.AddWithValue("@bookid", bookId);
+                    com.Parameters.AddWithValue("@userid", userId);
+                    com.Parameters.AddWithValue("@bookcount", bookcount);
+                    //con.Open();
+                    int i = com.ExecuteNonQuery();
+                    //con.Close();
+                    if (i != 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
 
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception(ex.Message);
+                }
+                finally
+                {
+                    con.Close();
+                }
             }
-            catch (Exception ex)
+            else
             {
-                throw new Exception(ex.Message);
-            }
-            finally
-            {
-                con.Close();
+                return false;
             }
 
         }
@@ -78,6 +88,8 @@ namespace BookStoreRepository.Repository
                        BookId = Convert.ToInt32(dr["bookid"]),
                        CartId = Convert.ToInt32(dr["cartid"]),
                        UserId = Convert.ToInt32(dr["userid"]),
+                       BookCount= Convert.ToInt32(dr["bookcount"]),
+                       isAvailable= Convert.ToInt32(dr["isavailable"]),
                        Book = new Book()
                        {
                            BookId = Convert.ToInt32(dr["bookid"]),
@@ -104,6 +116,55 @@ namespace BookStoreRepository.Repository
                 return null;
             }
         }
+        public List<Cart> GetCartByBook(int userId,int bookid)
+        {
+            List<Cart> CartList = new List<Cart>();
+            try
+            {
+                connection();
+                SqlCommand com = new SqlCommand("spGetCartByBook", con);
+                com.Parameters.AddWithValue("@userid", userId);
+                com.Parameters.AddWithValue("@bookid", bookid);
+                com.CommandType = CommandType.StoredProcedure;
+                SqlDataAdapter da = new SqlDataAdapter(com);
+                DataTable dt = new DataTable();
+                con.Open();
+                da.Fill(dt);
+                foreach (DataRow dr in dt.Rows)
+                {
+                    CartList.Add(
+                   new Cart
+                   {
+                       BookId = Convert.ToInt32(dr["bookid"]),
+                       CartId = Convert.ToInt32(dr["cartid"]),
+                       UserId = Convert.ToInt32(dr["userid"]),
+                       isAvailable = Convert.ToInt32(dr["isavailable"]),
+                       Book = new Book()
+                       {
+                           BookId = Convert.ToInt32(dr["bookid"]),
+                           Bookname = Convert.ToString(dr["bookname"]),
+                           BookDescription = Convert.ToString(dr["bookdecription"]),
+                           BookAuthor = Convert.ToString(dr["bookauthor"]),
+                           Image = Convert.ToString(dr["image"]),
+                           BookCount = Convert.ToInt32(dr["bookcount"]),
+                           BookPrice = Convert.ToDouble(dr["bookprice"]),
+                           Rating = Convert.ToDouble(dr["rating"])
+                       }
+                   });
+                }
+            }
+            catch (Exception ex) { throw new Exception(ex.Message); }
+            if (CartList.Count > 0 && CartList.Any(item => item.isAvailable == 1))
+            {
+                con.Close();
+                return CartList;
+            }
+            else
+            {
+                con.Close();
+                return null;
+            }
+        }
         public bool DeleteCart(int cartid)
         {
             try
@@ -115,7 +176,11 @@ namespace BookStoreRepository.Repository
                 con.Open();
                 int i = com.ExecuteNonQuery();
                 con.Close();
-                return true;
+                if (i > 0)
+                {
+                    return true;
+                }
+                return false;
             }
             catch (Exception ex)
             {

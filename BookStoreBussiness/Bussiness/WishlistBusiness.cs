@@ -29,5 +29,10 @@ namespace BookStoreBussiness.Bussiness
         {
             return this.wishrepository.GetWishList(userId);
         }
+
+        public int MoveToCart(Wishlist wishlist)
+        {
+            return this.wishrepository.MoveToCart(wishlist);
+        }
     }
 }

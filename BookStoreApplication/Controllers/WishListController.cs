@@ -75,5 +75,26 @@ namespace BookStoreApplication.Controllers
                 return this.NotFound(new { Status = false, Message = ex.Message });
             }
         }
+
+        [HttpPut]
+        [Route("MoveWishListToCart")]
+        public ActionResult MoveToCart(Wishlist wishlist)
+        {
+            try
+            {
+                var userId = Convert.ToInt32(User.Claims.FirstOrDefault(v => v.Type == "Id").Value);
+                wishlist.UserId = userId;
+                var result = this.wishlistBusiness.MoveToCart(wishlist);
+                if (result >0)
+                {
+                    return this.Ok(new { Status = true, Message = "Moved to cart" });
+                }
+                return this.BadRequest(new { Status = false, Message = "Data empty" });
+            }
+            catch (Exception ex)
+            {
+                return this.NotFound(new { Status = false, Message = ex.Message });
+            }
+        }
     }
 }

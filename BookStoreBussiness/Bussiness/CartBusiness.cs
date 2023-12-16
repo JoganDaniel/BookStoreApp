@@ -29,6 +29,11 @@ namespace BookStoreBussiness.Bussiness
             return this.cartrepository.GetCart(userId);
         }
 
+        public List<Cart> GetCartByBook(int userId, int bookid)
+        {
+           return this.cartrepository.GetCartByBook(userId,bookid);
+        }
+
         public int UpdateCart(int userId, int cartid, int count)
         {
             return this.cartrepository.UpdateCart(userId, cartid, count);

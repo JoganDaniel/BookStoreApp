@@ -30,7 +30,7 @@ namespace BookStoreRepository.Repository
             {
                 connection();
                 List<OrderSummary> summaryOrder = new List<OrderSummary>();
-                SqlCommand com = new SqlCommand("spOrderSummary", con);
+                SqlCommand com = new SqlCommand("spGetOrderSummary", con);
                 com.CommandType = CommandType.StoredProcedure;
                 com.Parameters.AddWithValue("@UserId", userid);
                 SqlDataAdapter da = new SqlDataAdapter(com);
